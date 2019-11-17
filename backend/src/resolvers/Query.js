@@ -6,6 +6,7 @@ const Query = {
   //   return items;
   // },
   items: forwardTo('db'), // shorthand for the above (ie doesn't need any )
+  item: forwardTo('db'),
 };
 
 module.exports = Query;
