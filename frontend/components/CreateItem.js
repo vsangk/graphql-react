@@ -30,8 +30,8 @@ class CreateItem extends Component {
   state = {
     title: 'Default Item',
     description: 'Default Description',
-    image: 'description.png',
-    largeImage: 'large-description.png',
+    image: '',
+    largeImage: '',
     price: 1000,
   };
 
@@ -39,6 +39,27 @@ class CreateItem extends Component {
     const { name, type, value } = e.target;
     const val = type === 'number' ? parseFloat(value) : value;
     this.setState({ [name]: val });
+  };
+
+  uploadFile = async e => {
+    const files = e.target.files;
+    const data = new FormData();
+    data.append('file', files[0]);
+    // cloudinary metadata
+    data.append('upload_preset', 'marketplace-graphql');
+
+    const res = await fetch(
+      'https://api.cloudinary.com/v1_1/vsangk-projects/image/upload',
+      {
+        method: 'POST',
+        body: data,
+      }
+    );
+    const file = await res.json();
+    this.setState({
+      image: file.secure_url,
+      largeImage: file.eager[0].secure_url,
+    });
   };
 
   render() {
@@ -60,6 +81,25 @@ class CreateItem extends Component {
           >
             <Error error={error} />
             <fieldset disabled={loading} aria-busy={loading}>
+              {/* TODO: Refactor image uploading to form submission */}
+              <label htmlFor="file">
+                Image
+                <input
+                  type="file"
+                  id="file"
+                  name="file"
+                  placeholder="Upload an image"
+                  required
+                  onChange={this.uploadFile}
+                />
+                {this.state.image && (
+                  <img
+                    width="200"
+                    src={this.state.image}
+                    alt="Upload Preview"
+                  />
+                )}
+              </label>
               <label htmlFor="title">
                 Title
                 <input
@@ -85,7 +125,7 @@ class CreateItem extends Component {
                 />
               </label>
               <label htmlFor="description">
-                Title
+                Description
                 <textarea
                   id="description"
                   name="description"
