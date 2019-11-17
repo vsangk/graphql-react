@@ -5,7 +5,7 @@ const Query = {
   //   const items = await ctx.db.query.items();
   //   return items;
   // },
-  items: forwardTo('db'), // shorthand for the above (ie doesn't need any )
+  items: forwardTo('db'), // shorthand for the above (ie doesn't need any custom logic/resolvers)
   item: forwardTo('db'),
 };
 
