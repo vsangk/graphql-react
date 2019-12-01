@@ -33,7 +33,6 @@ const mutations = {
     );
   },
   async deleteItem(parent, args, ctx, info) {
-    console.log(parent, args, ctx, info);
     const where = { id: args.id };
     // 1. find the item
     const item = await ctx.db.query.item({ where }, `{ id title }`);
@@ -82,6 +81,10 @@ const mutations = {
     });
     // return the user
     return user;
+  },
+  signout(parents, args, ctx, info) {
+    ctx.response.clearCookie('token');
+    return { message: 'Successfully Logged Out' };
   },
 };
 
